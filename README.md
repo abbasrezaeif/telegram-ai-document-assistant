@@ -5,10 +5,20 @@
 
 A Telegram bot that receives PDF files, extracts text using PDF parsing or OCR, cleans the extracted text, summarizes it with a local AI model using Ollama, and sends the result back to the user.
 
+## Tech Stack
+
+- Python
+- Telegram Bot API
+- Ollama
+- Qwen2.5
+- SQLite
+- pdfplumber
+- Tesseract OCR
+- pdf2image
+- Poppler
+
 ## Features
 
-- Automatic OCR detection
-- Local-first AI processing
 - Telegram Bot integration
 - PDF upload support
 - PDF text extraction with pdfplumber
@@ -20,6 +30,9 @@ A Telegram bot that receives PDF files, extracts text using PDF parsing or OCR, 
 - SQLite database tracking
 - Document status tracking
 - Saves extracted text and summaries
+- Automatic OCR detection
+- Local-first AI processing
+- Smart PDF/OCR fallback
 
 ## Workflow
 
@@ -45,11 +58,17 @@ Summarize with Ollama
 Save Summary
     ↓
 Send Summary to Telegram
+```
 
 ## Screenshots
 
+### Start
 <img width="1170" height="2532" alt="start" src="https://github.com/user-attachments/assets/73863a68-426c-40f3-89dd-7c42ab60e622" />
+
+### OCR Processing
 <img width="1170" height="2532" alt="ocr" src="https://github.com/user-attachments/assets/32bacbfb-4fda-4101-8004-752e53f7b333" />
+
+### Summary Result
 <img width="1170" height="2532" alt="suumary" src="https://github.com/user-attachments/assets/c7546e95-fe3e-479b-8088-c30927f0e071" />
 
 ## Future Improvements
@@ -60,3 +79,7 @@ Send Summary to Telegram
 - Web Dashboard
 - Background Workers
 - Multi-language Support
+
+## License
+
+MIT License

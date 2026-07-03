@@ -5,6 +5,10 @@
 
 A Telegram bot that receives PDF files, extracts text using PDF parsing or OCR, cleans the extracted text, summarizes it with a local AI model using Ollama, and sends the result back to the user.
 
+## Overview
+
+DocPilot AI is a local-first Telegram assistant that can process PDF documents, automatically detect when OCR is required, extract readable text, generate AI-powered summaries using Ollama, and keep track of processed documents with SQLite.
+
 ## Tech Stack
 
 - Python

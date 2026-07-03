@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from src.database.db import save_document
+from src.database.db import save_document, update_status, update_output_files
 from src.services.downloader import save_pdf
 from src.services.pdf_reader import (
     extract_text_from_pdf,
@@ -47,6 +47,8 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
         file_path=str(path),
     )
 
+    update_status(document_id, "DOWNLOADED")
+
     await update.message.reply_text(
         f"✅ Saved successfully!\n\n"
         f"File: {path.name}\n"
@@ -54,10 +56,14 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"🔍 Extracting text..."
     )
 
+    update_status(document_id, "EXTRACTING")
+
     extracted_text = extract_text_from_pdf(str(path))
     extraction_method = "pdfplumber"
 
     if should_use_ocr(extracted_text):
+        update_status(document_id, "OCR")
+
         await update.message.reply_text(
             "⚠️ Selectable text looks empty or corrupted.\n"
             "Running OCR..."
@@ -66,14 +72,19 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
         extracted_text = ocr_pdf(str(path), language="fas+eng")
         extraction_method = "ocr"
 
+    update_status(document_id, "CLEANING")
+
     cleaned_text = clean_text(extracted_text)
     text_output_path = save_extracted_text(document_id, cleaned_text)
 
     if not cleaned_text:
+        update_status(document_id, "FAILED")
         await update.message.reply_text(
             "❌ Could not extract readable text from this PDF."
         )
         return
+
+    update_status(document_id, "SUMMARIZING")
 
     await update.message.reply_text(
         f"✅ Text extracted and cleaned successfully!\n\n"
@@ -86,6 +97,14 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     summary = summarize_text(cleaned_text, language="Persian")
     summary_output_path = save_summary(document_id, summary)
+
+    update_output_files(
+        document_id=document_id,
+        extracted_text_path=str(text_output_path),
+        summary_path=str(summary_output_path),
+    )
+
+    update_status(document_id, "COMPLETED")
 
     telegram_summary = summary
     if len(telegram_summary) > 3500:

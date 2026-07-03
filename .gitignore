@@ -1,7 +1,24 @@
+# Environment
 .venv/
+.env
+
+# Python cache
 __pycache__/
 *.pyc
-.env
+*.pyo
+*.pyd
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Data files
 data/downloads/
 data/output/
-.DS_Store
+data/*.db
+
+# Logs
+*.log
+
+# IDE
+.vscode/

@@ -2,3 +2,5 @@ python-telegram-bot
 python-dotenv
 requests
 pdfplumber
+pytesseract
+pdf2image

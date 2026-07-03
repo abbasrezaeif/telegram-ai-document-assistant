@@ -3,7 +3,11 @@ from telegram.ext import ContextTypes
 
 from src.database.db import save_document
 from src.services.downloader import save_pdf
-from src.services.pdf_reader import extract_text_from_pdf, save_extracted_text
+from src.services.pdf_reader import (
+    extract_text_from_pdf,
+    save_extracted_text,
+    save_summary,
+)
 from src.services.ocr import ocr_pdf
 from src.services.cleaner import clean_text
 from src.services.summarizer import summarize_text
@@ -81,16 +85,21 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     summary = summarize_text(cleaned_text, language="Persian")
+    summary_output_path = save_summary(document_id, summary)
 
-    if len(summary) > 3500:
-        summary = summary[:3500] + "\n\n..."
+    telegram_summary = summary
+    if len(telegram_summary) > 3500:
+        telegram_summary = telegram_summary[:3500] + "\n\n..."
 
     await update.message.reply_text(
-        f"✅ Summary ready!\n\n{summary}"
+        f"✅ Summary ready!\n\n"
+        f"Saved as: {summary_output_path.name}\n\n"
+        f"{telegram_summary}"
     )
 
     print(f"Saved PDF: {path}")
     print(f"Saved to database with document_id: {document_id}")
     print(f"Extraction method: {extraction_method}")
     print(f"Extracted and cleaned text saved to: {text_output_path}")
+    print(f"Summary saved to: {summary_output_path}")
     print("Summary sent to user")

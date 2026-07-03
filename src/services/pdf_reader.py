@@ -27,3 +27,13 @@ def save_extracted_text(document_id: int, text: str) -> Path:
     output_path.write_text(text, encoding="utf-8")
 
     return output_path
+
+
+def save_summary(document_id: int, summary: str) -> Path:
+    output_dir = Path("data/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_path = output_dir / f"document_{document_id}_summary.txt"
+    output_path.write_text(summary, encoding="utf-8")
+
+    return output_path
